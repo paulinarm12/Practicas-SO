@@ -1,4 +1,5 @@
 @echo off
+::Agregar la operacion inversa de 2x2, 3x3 y 4x4; ademas de la transpuesta de 4x4
 :: Nombre del equipo: S.O. AGREVAl
 :: Fecha: 06/09/2024
 :: Version: 1.5

@@ -1,0 +1,585 @@
+@echo off
+:: Nombre del equipo: S.O. AGREVAl
+:: Fecha: 12/09/2024
+:: Version: 1.6
+:: Este programa realiza operaciones con matrices, incluyendo:
+:: multiplicación por escalar, suma de matrices, multiplicación de matrices,
+:: transposición de matrices, cálculo de determinantes e inversas de matrices.
+
+@echo off
+setlocal enabledelayedexpansion
+
+:start
+cls
+echo ===============================================================================
+echo                    Calculadora de Matrices - S.O. AGREVAl
+echo ===============================================================================
+echo 1.- Multiplicacion por escalar
+echo 2.- Suma de matrices
+echo 3.- Multiplicacion de matrices
+echo 4.- Transpuesta de la matriz
+echo 5.- Determinante de la matriz
+echo 6.- Inversa de la matiz
+echo 7.- Salir
+echo ===============================================================================
+set /p option="Elige el numero de la opcion que quieras: "
+
+if "%option%" == "1" goto :escalar
+if "%option%" == "2" goto :suma
+if "%option%" == "3" goto :multiplicacion
+if "%option%" == "4" goto :transpuesta
+if "%option%" == "5" goto :determinante
+if "%option%" == "6" goto :inversa
+if "%option%" == "7" goto :fin
+echo. Opcion no valida
+pause
+goto start
+
+:seleccionar_matriz
+echo ===============================================================================
+echo                        Seleccion de Tamaño de Matriz
+echo ===============================================================================
+echo 1.- Matriz 2x2
+echo 2.- Matriz 3x3
+echo 3.- Matriz 4x4
+echo ===============================================================================
+set /p size="Elige el tamaño de la matriz (1 o 2 o 3): "
+
+if "%size%" == "1" goto :leer_matriz_2x2
+if "%size%" == "2" goto :leer_matriz_3x3
+if "%size%" == "3" goto :leer_matriz_4x4
+echo. Opción no válida
+pause
+goto seleccionar_matriz
+
+:leer_matriz_2x2
+cls
+echo ===============================================================================
+echo                          Estructura de la Matriz 2x2
+echo ===============================================================================
+echo [ 1  2 ]
+echo [ 3  4 ]
+echo ------------------------------------------------------------------------------
+echo Ingresa los valores de la matriz 2x2:
+set /p m11="Valor 1 [1,1]: "
+set /p m12="Valor 2 [1,2]: "
+set /p m21="Valor 3 [2,1]: "
+set /p m22="Valor 4 [2,2]: "
+goto :eof
+
+:leer_matriz_3x3
+cls
+echo ===============================================================================
+echo                           Estructura de la Matriz 3x3
+echo ===============================================================================
+echo [ 1  2  3 ]
+echo [ 4  5  6 ]
+echo [ 7  8  9 ]
+echo ------------------------------------------------------------------------------
+echo Ingresa los valores de la matriz 3x3:
+set /p m11="Valor 1 [1,1]: "
+set /p m12="Valor 2 [1,2]: "
+set /p m13="Valor 3 [1,3]: "
+set /p m21="Valor 4 [2,1]: "
+set /p m22="Valor 5 [2,2]: "
+set /p m23="Valor 6 [2,3]: "
+set /p m31="Valor 7 [3,1]: "
+set /p m32="Valor 8 [3,2]: "
+set /p m33="Valor 9 [3,3]: "
+goto :eof
+
+:leer_matriz_4x4
+cls
+echo ===============================================================================
+echo                           Estructura de la Matriz 4x4
+echo ===============================================================================
+echo [  1   2   3   4 ]
+echo [  5   6   7   8 ]
+echo [  9  10  11  12 ]
+echo [ 13  14  15  16 ]
+echo ------------------------------------------------------------------------------
+echo Ingresa los valores de la matriz 3x3:
+set /p m11="Valor 1 [1,1]: "
+set /p m12="Valor 2 [1,2]: "
+set /p m13="Valor 3 [1,3]: "
+set /p m14="Valor 4 [1,4]: "
+set /p m21="Valor 5 [2,1]: "
+set /p m22="Valor 6 [2,2]: "
+set /p m23="Valor 7 [2,3]: "
+set /p m24="Valor 8 [2,4]: "
+set /p m31="Valor 9 [3,1]: "
+set /p m32="Valor 10 [3,2]: "
+set /p m33="Valor 11 [3,3]: "
+set /p m34="Valor 12 [3,4]: "
+set /p m41="Valor 13 [4,1]: "
+set /p m42="Valor 14 [4,2]: "
+set /p m43="Valor 15 [4,3]: "
+set /p m44="Valor 16 [4,4]: "
+goto :eof
+
+:leer_segunda_matriz_2x2
+cls
+echo ===============================================================================
+echo                         Ingreso de Segunda Matriz 2x2
+echo ===============================================================================
+echo [ 1  2 ]
+echo [ 3  4 ]
+echo ------------------------------------------------------------------------------
+set /p n11="Valor 1 [1,1]: "
+set /p n12="Valor 2 [1,2]: "
+set /p n21="Valor 3 [2,1]: "
+set /p n22="Valor 4 [2,2]: "
+goto :eof
+
+:leer_segunda_matriz_3x3
+cls
+echo ===============================================================================
+echo                         Ingreso de Segunda Matriz 3x3
+echo ===============================================================================
+echo [ 1  2  3 ]
+echo [ 4  5  6 ]
+echo [ 7  8  9 ]
+echo ------------------------------------------------------------------------------
+set /p n11="Valor 1 [1,1]: "
+set /p n12="Valor 2 [1,2]: "
+set /p n13="Valor 3 [1,3]: "
+set /p n21="Valor 4 [2,1]: "
+set /p n22="Valor 5 [2,2]: "
+set /p n23="Valor 6 [2,3]: "
+set /p n31="Valor 7 [3,1]: "
+set /p n32="Valor 8 [3,2]: "
+set /p n33="Valor 9 [3,3]: "
+goto :eof
+
+:suma
+cls
+echo ===============================================================================
+echo                               Suma de Matrices
+echo ===============================================================================
+call :seleccionar_matriz
+
+if "%size%" == "1" (
+    call :leer_segunda_matriz_2x2
+    set /a sum11=!m11! + !n11!
+    set /a sum12=!m12! + !n12!
+    set /a sum21=!m21! + !n21!
+    set /a sum22=!m22! + !n22!
+    echo ------------------------------------------------------------------------------
+    echo El resultado de la suma es:
+    echo [ !sum11!  !sum12! ]
+    echo [ !sum21!  !sum22! ]
+    echo ===============================================================================
+    echo 3.- Regresar al Menu Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto suma
+) else if "%size%" == "2" (
+    call :leer_segunda_matriz_3x3
+    set /a sum11=!m11! + !n11!
+    set /a sum12=!m12! + !n12!
+    set /a sum13=!m13! + !n13!
+    set /a sum21=!m21! + !n21!
+    set /a sum22=!m22! + !n22!
+    set /a sum23=!m23! + !n23!
+    set /a sum31=!m31! + !n31!
+    set /a sum32=!m32! + !n32!
+    set /a sum33=!m33! + !n33!
+    echo ------------------------------------------------------------------------------
+    echo El resultado de la suma es:
+    echo [ !sum11!  !sum12!  !sum13! ]
+    echo [ !sum21!  !sum22!  !sum23! ]
+    echo [ !sum31!  !sum32!  !sum33! ]
+    echo ===============================================================================
+    echo 3.- Regresar al Menu Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto suma
+)
+pause
+goto start
+
+:transpuesta
+cls
+echo ===============================================================================
+echo                            Transpuesta de la Matriz
+echo ===============================================================================
+call :seleccionar_matriz
+
+if "%size%" == "1" (
+    echo ------------------------------------------------------------------------------
+    echo La transpuesta de la matriz es:
+    echo [ !m11!  !m21! ]
+    echo [ !m12!  !m22! ]
+    echo ===============================================================================
+    echo 3.- Regresar al Menu Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto transpuesta
+) else if "%size%" == "2" (
+    echo ------------------------------------------------------------------------------
+    echo La transpuesta de la matriz es:
+    echo [ !m11!  !m21!  !m31! ]
+    echo [ !m12!  !m22!  !m32! ]
+    echo [ !m13!  !m23!  !m33! ]
+    echo ===============================================================================
+    echo 3.- Regresar al Menu Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto transpuesta
+)else if "%size%" == "3" (
+    echo ------------------------------------------------------------------------------
+    echo La transpuesta de la matriz es:
+    echo [ !m11!  !m21!  !m31! !m41! ]
+    echo [ !m12!  !m22!  !m32! !m42! ]
+    echo [ !m13!  !m23!  !m33! !m43! ]
+    echo [ !m14!  !m24!  !m34! !m44! ]
+    echo ===============================================================================
+    echo 3.- Regresar al Menu Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto transpuesta
+)
+pause
+goto start
+
+:determinante
+cls
+echo ===============================================================================
+echo                           Determinante de la Matriz
+echo ===============================================================================
+call :seleccionar_matriz
+
+if "%size%" == "1" (
+    set /a det=!m11! * !m22! - !m12! * !m21!
+    echo ------------------------------------------------------------------------------
+    echo El determinante de la matriz 2x2 es: !det!
+    echo ===============================================================================
+    echo 3.- Regresar al Menu Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto determinante
+) else if "%size%" == "2" (
+    set /a diagonal1=!m11! * !m22! * !m33!
+    set /a diagonal2=!m12! * !m23! * !m31!
+    set /a diagonal3=!m13! * !m21! * !m32!
+    set /a diagonal4=!m13! * !m22! * !m31!
+    set /a diagonal5=!m11! * !m23! * !m32!
+    set /a diagonal6=!m12! * !m21! * !m33!
+    set /a determinante=!diagonal1! + !diagonal2! + !diagonal3! - !diagonal4! - !diagonal5! - !diagonal6!
+    echo ------------------------------------------------------------------------------
+    echo El determinante de la matriz 3x3 es: !determinante!
+    echo ===============================================================================
+    echo 3.- Regresar al Menu Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto determinante
+)
+pause
+goto start
+
+:multiplicacion
+cls
+echo ===============================================================================
+echo                          Multiplicacion de Matrices
+echo ===============================================================================
+call :seleccionar_matriz
+
+if "%size%" == "1" (
+    call :leer_segunda_matriz_2x2
+    set /a prod11=!m11! * !n11! + !m12! * !n21!
+    set /a prod12=!m11! * !n12! + !m12! * !n22!
+    set /a prod21=!m21! * !n11! + !m22! * !n21!
+    set /a prod22=!m21! * !n12! + !m22! * !n22!
+    echo ------------------------------------------------------------------------------
+    echo El resultado de la multiplicacion es:
+    echo [ !prod11!  !prod12! ]
+    echo [ !prod21!  !prod22! ]
+    echo ===============================================================================
+    echo 3.- Regresar al Menu Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto multiplicacion
+) else if "%size%" == "2" (
+    call :leer_segunda_matriz_3x3
+    set /a prod11=!m11! * !n11! + !m12! * !n21! + !m13! * !n31!
+    set /a prod12=!m11! * !n12! + !m12! * !n22! + !m13! * !n32!
+    set /a prod13=!m11! * !n13! + !m12! * !n23! + !m13! * !n33!
+    set /a prod21=!m21! * !n11! + !m22! * !n21! + !m23! * !n31!
+    set /a prod22=!m21! * !n12! + !m22! * !n22! + !m23! * !n32!
+    set /a prod23=!m21! * !n13! + !m22! * !n23! + !m23! * !n33!
+    set /a prod31=!m31! * !n11! + !m32! * !n21! + !m33! * !n31!
+    set /a prod32=!m31! * !n12! + !m32! * !n22! + !m33! * !n32!
+    set /a prod33=!m31! * !n13! + !m32! * !n23! + !m33! * !n33!
+    echo ------------------------------------------------------------------------------
+    echo El resultado de la multiplicacion es:
+    echo [ !prod11!  !prod12!  !prod13! ]
+    echo [ !prod21!  !prod22!  !prod23! ]
+    echo [ !prod31!  !prod32!  !prod33! ]
+    echo ===============================================================================
+    echo 3.- Regresar al Menu Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto multiplicacion
+)
+pause
+goto start
+
+:escalar
+cls
+echo ===============================================================================
+echo                            Multiplicacion por Escalar
+echo ===============================================================================
+call :seleccionar_matriz
+
+set /p escalar="Ingrese el valor del escalar: "
+
+if "%size%" == "1" (
+    set /a prod11=!m11! * !escalar!
+    set /a prod12=!m12! * !escalar!
+    set /a prod21=!m21! * !escalar!
+    set /a prod22=!m22! * !escalar!
+    echo ------------------------------------------------------------------------------
+    echo El resultado de la multiplicacion es:
+    echo [ !prod11!  !prod12! ]
+    echo [ !prod21!  !prod22! ]
+    echo ===============================================================================
+    echo 3.- Regresar al Menu Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto escalar
+) else if "%size%" == "2" (
+    set /a prod11=!m11! * !escalar!
+    set /a prod12=!m12! * !escalar!
+    set /a prod13=!m13! * !escalar!
+    set /a prod21=!m21! * !escalar!
+    set /a prod22=!m22! * !escalar!
+    set /a prod23=!m23! * !escalar!
+    set /a prod31=!m31! * !escalar!
+    set /a prod32=!m32! * !escalar!
+    set /a prod33=!m33! * !escalar!
+    echo ------------------------------------------------------------------------------
+    echo El resultado de la multiplicacion es:
+    echo [ !prod11!  !prod12!  !prod13! ]
+    echo [ !prod21!  !prod22!  !prod23! ]
+    echo [ !prod31!  !prod32!  !prod33! ]
+    echo ===============================================================================
+    echo 3.- Regresar al Menú Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto escalar
+)
+pause
+goto start
+
+:inversa
+cls
+echo ===============================================================================
+echo                            Inversa de la matriz
+echo ===============================================================================
+call :seleccionar_matriz
+
+if "%size%" == "1" (
+    set /a prod11=!m22!
+    set /a prod12=-!m12!
+    set /a prod21=-!m21!
+    set /a prod22=!m11!
+    echo ------------------------------------------------------------------------------
+    echo adjunta:
+    echo [ !prod11!  !prod12! ]
+    echo [ !prod21!  !prod22! ] 
+    set /a det=!m11! * !m22! - !m12! * !m21!
+    echo La inversa de la matriz es:
+    echo [ !prod11!/!det!  !prod12!/!det! ]
+    echo [ !prod21!/!det!  !prod22!/!det! ] 
+    echo ===============================================================================
+    echo 3.- Regresar al Menu Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto inversa
+) else if "%size%" == "2" (
+    set /a diagonal1=!m11! * !m22! * !m33!
+    set /a diagonal2=!m12! * !m23! * !m31!
+    set /a diagonal3=!m13! * !m21! * !m32!
+    set /a diagonal4=!m13! * !m22! * !m31!
+    set /a diagonal5=!m11! * !m23! * !m32!
+    set /a diagonal6=!m12! * !m21! * !m33!
+    set /a det=!diagonal1! + !diagonal2! + !diagonal3! - !diagonal4! - !diagonal5! - !diagonal6!
+    set /a prod11=!m22! * !m33! - !m32! * !m23!
+    set /a prod12=-!m12! * !m33! + !m32! * !m13!
+    set /a prod13=!m12! * !m23! - !m22! * !m13!
+    set /a prod21=- !m21! * !m33! + !m31! * !m23!
+    set /a prod22=!m11! * !m33! - !m31! * !m13!
+    set /a prod23=-!m11! * !m23! - !m21! * !m13!
+    set /a prod31=!m21! * !m32! - !m31! * !m22!
+    set /a prod32=-!m11! * !m32! + !m31! * !m12!
+    set /a prod33=!m11! * !m22! - !m21! * !m12!
+    echo ------------------------------------------------------------------------------
+    echo la adjunta es:
+    echo [ !prod11!  !prod12!  !prod13! ]
+    echo [ !prod21!  !prod22!  !prod23! ]
+    echo [ !prod31!  !prod32!  !prod33! ]
+    echo ------------------------------------------------------------------------------
+    echo la inversa es:
+    echo [ !prod11!/!det!  !prod12!/!det!  !prod13!/!det! ]
+    echo [ !prod21!/!det!  !prod22!/!det!  !prod23!/!det! ]
+    echo [ !prod31!/!det!  !prod32!/!det!  !prod33!/!det! ]
+    echo ===============================================================================
+    echo 3.- Regresar al Menu Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto inversa
+)else if "%size%" == "3" (
+    set /a diagonal1=!m44! * !m22! * !m33!
+    set /a diagonal2=!m34! * !m23! * !m42!
+    set /a diagonal3=!m43! * !m24! * !m32!
+    set /a diagonal4=!m42! * !m33! * !m24!
+    set /a diagonal5=!m43! * !m34! * !m22!
+    set /a diagonal6=!m44! * !m32! * !m23!
+    set /a x1=!diagonal1! + !diagonal2! + !diagonal3! - !diagonal4! - !diagonal5! - !diagonal6!
+    set /a diagonal7=!m44! * !m21! * !m33!
+    set /a diagonal8=!m34! * !m23! * !m41!
+    set /a diagonal9=!m43! * !m24! * !m31!
+    set /a diagonal10=!m41! * !m33! * !m24!
+    set /a diagonal11=!m43! * !m34! * !m21!
+    set /a diagonal12=!m44! * !m31! * !m23!
+    set /a x2=!diagonal7! + !diagonal8! + !diagonal9! - !diagonal10! - !diagonal11! - !diagonal12!
+    set /a diagonal13=!m44! * !m21! * !m32!
+    set /a diagonal14=!m34! * !m22! * !m41!
+    set /a diagonal15=!m42! * !m24! * !m31!
+    set /a diagonal16=!m41! * !m32! * !m24!
+    set /a diagonal17=!m42! * !m34! * !m21!
+    set /a diagonal18=!m44! * !m31! * !m22!
+    set /a x3=!diagonal13! + !diagonal14! + !diagonal15! - !diagonal16! - !diagonal17! - !diagonal18!
+    set /a diagonal19=!m43! * !m21! * !m32!
+    set /a diagonal20=!m33! * !m22! * !m41!
+    set /a diagonal21=!m42! * !m23! * !m31!
+    set /a diagonal22=!m41! * !m32! * !m23!
+    set /a diagonal23=!m42! * !m33! * !m21!
+    set /a diagonal24=!m43! * !m31! * !m22!
+    set /a x4=!diagonal19! + !diagonal20! + !diagonal21! - !diagonal22! - !diagonal23! - !diagonal24!
+    set /a diagonal25=!m44! * !m12! * !m33!
+    set /a diagonal26=!m34! * !m13! * !m42!
+    set /a diagonal27=!m43! * !m14! * !m32!
+    set /a diagonal28=!m42! * !m33! * !m14!
+    set /a diagonal29=!m43! * !m34! * !m12!
+    set /a diagonal30=!m44! * !m32! * !m23!
+    set /a x5=!diagonal25! + !diagonal26! + !diagonal27! - !diagonal28! - !diagonal29! - !diagonal30!
+    set /a diagonal31=!m44! * !m11! * !m33!
+    set /a diagonal32=!m34! * !m13! * !m41!
+    set /a diagonal33=!m43! * !m14! * !m31!
+    set /a diagonal34=!m41! * !m33! * !m14!
+    set /a diagonal35=!m43! * !m34! * !m11!
+    set /a diagonal36=!m44! * !m31! * !m13!
+    set /a x6=!diagonal31! + !diagonal32! + !diagonal33! - !diagonal34! - !diagonal35! - !diagonal36!
+    set /a diagonal37=!m44! * !m11! * !m32!
+    set /a diagonal38=!m34! * !m12! * !m41!
+    set /a diagonal39=!m42! * !m14! * !m31!
+    set /a diagonal40=!m41! * !m32! * !m14!
+    set /a diagonal41=!m42! * !m34! * !m11!
+    set /a diagonal42=!m44! * !m31! * !m12!
+    set /a x7=!diagonal37! + !diagonal38! + !diagonal39! - !diagonal40! - !diagonal41! - !diagonal42!
+    set /a diagonal43=!m43! * !m11! * !m32!
+    set /a diagonal44=!m33! * !m12! * !m41!
+    set /a diagonal45=!m42! * !m13! * !m31!
+    set /a diagonal46=!m41! * !m32! * !m13!
+    set /a diagonal47=!m42! * !m33! * !m11!
+    set /a diagonal48=!m43! * !m31! * !m12!
+    set /a x8=!diagonal43! + !diagonal44! + !diagonal45! - !diagonal46! - !diagonal47! - !diagonal48!
+    set /a diagonal49=!m44! * !m22! * !m13!
+    set /a diagonal50=!m14! * !m23! * !m42!
+    set /a diagonal51=!m43! * !m24! * !m12!
+    set /a diagonal52=!m42! * !m13! * !m24!
+    set /a diagonal53=!m43! * !m14! * !m22!
+    set /a diagonal54=!m44! * !m12! * !m23!
+    set /a x9=!diagonal49! + !diagonal50! + !diagonal51! - !diagonal52! - !diagonal53! - !diagonal54!
+    set /a diagonal55=!m44! * !m21! * !m13!
+    set /a diagonal56=!m14! * !m23! * !m41!
+    set /a diagonal57=!m43! * !m24! * !m11!
+    set /a diagonal58=!m41! * !m13! * !m24!
+    set /a diagonal59=!m43! * !m14! * !m21!
+    set /a diagonal60=!m44! * !m11! * !m23!
+    set /a x10=!diagonal55! + !diagonal56! + !diagonal57! - !diagonal158! - !diagonal59! - !diagonal60!
+    set /a diagonal61=!m44! * !m21! * !m12!
+    set /a diagonal62=!m14! * !m22! * !m41!
+    set /a diagonal63=!m42! * !m24! * !m11!
+    set /a diagonal64=!m41! * !m12! * !m24!
+    set /a diagonal65=!m42! * !m14! * !m21!
+    set /a diagonal66=!m44! * !m11! * !m22!
+    set /a x11=!diagonal61! + !diagonal62! + !diagonal63! - !diagonal64! - !diagonal65! - !diagonal66!
+    set /a diagonal67=!m43! * !m21! * !m12!
+    set /a diagonal68=!m13! * !m22! * !m41!
+    set /a diagonal69=!m42! * !m23! * !m11!
+    set /a diagonal70=!m41! * !m12! * !m23!
+    set /a diagonal71=!m42! * !m13! * !m21!
+    set /a diagonal72=!m43! * !m11! * !m22!
+    set /a x12=!diagonal67! + !diagonal68! + !diagonal69! - !diagonal70! - !diagonal71! - !diagonal72!
+    set /a diagonal73=!m14! * !m22! * !m33!
+    set /a diagonal74=!m34! * !m23! * !m12!
+    set /a diagonal75=!m13! * !m24! * !m32!
+    set /a diagonal76=!m12! * !m33! * !m24!
+    set /a diagonal77=!m13! * !m34! * !m22!
+    set /a diagonal78=!m14! * !m32! * !m23!
+    set /a x13=!diagonal73! + !diagonal74! + !diagonal75! - !diagonal76! - !diagonal77! - !diagonal78!
+    set /a diagonal79=!m14! * !m21! * !m33!
+    set /a diagonal80=!m34! * !m23! * !m11!
+    set /a diagonal81=!m13! * !m24! * !m31!
+    set /a diagonal82=!m11! * !m33! * !m24!
+    set /a diagonal83=!m13! * !m34! * !m21!
+    set /a diagonal84=!m14! * !m31! * !m23!
+    set /a x14=!diagonal79! + !diagonal80! + !diagonal81! - !diagonal82! - !diagonal83! - !diagonal84!
+    set /a diagonal85=!m14! * !m21! * !m32!
+    set /a diagonal86=!m34! * !m22! * !m11!
+    set /a diagonal87=!m12! * !m24! * !m31!
+    set /a diagonal88=!m11! * !m32! * !m24!
+    set /a diagonal89=!m12! * !m34! * !m21!
+    set /a diagonal90=!m14! * !m31! * !m22!
+    set /a x15=!diagonal85! + !diagonal86! + !diagonal87! - !diagonal88! - !diagonal89! - !diagonal90!
+    set /a diagonal91=!m13! * !m21! * !m32!
+    set /a diagonal92=!m33! * !m22! * !m11!
+    set /a diagonal93=!m12! * !m23! * !m31!
+    set /a diagonal94=!m11! * !m32! * !m23!
+    set /a diagonal95=!m12! * !m33! * !m21!
+    set /a diagonal96=!m13! * !m31! * !m22!
+    set /a x16=!diagonal91! + !diagonal92! + !diagonal93! - !diagonal94! - !diagonal95! - !diagonal96!
+    set /a y1= !m11! * !x1!
+    set /a y2= -!m12! * !x2!
+    set /a y3= !m13! * !x3!
+    set /a y4= -!m14! * !x4!
+    set /a det= !y1!+!y2!+!y3!+!y4!
+    echo ------------------------------------------------------------------------------
+    echo la adjunta es:
+    echo [  !x1!   !x2!   !x3!  !x4! ]
+    echo [  !x5!   !x6!   !x7!  !x8! ]
+    echo [  !x9!  !x10!  !x11! !x12! ]
+    echo [ !x13!  !x14!  !x15! !x16! ]
+    echo ------------------------------------------------------------------------------
+    echo la inversa es:
+    echo [ !x1!/!det!  !x5!/!det!   !x9!/!det!  !x13!/!det! ]
+    echo [ !x2!/!det!  !x6!/!det!   !x10!/!det! !x14!/!det! ]
+    echo [ !x3!/!det!  !x7!/!det!   !x11!/!det! !x12!/!det! ]
+    echo [ !x4!/!det!  !x18!/!det!  !x12!/!det! !x16!/!det! ]
+    echo ===============================================================================
+    echo 3.- Regresar al Menu Principal
+    echo ===============================================================================
+    set /p return="Elige el numero de la opcion que quieras: "
+    if "%return%" == "3" goto start
+    goto inversa
+)
+pause
+goto start
+
+:fin
+exit
